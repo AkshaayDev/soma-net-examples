@@ -6,7 +6,7 @@
 #include "stb_image_write.h"
 using namespace Soma;
 
-NeuralNetwork nn;
+Network nn;
 const char* imgLoadPath = "./img/img.png";
 const char* imgCreatePath = "./res.png";
 int width, height;
@@ -21,7 +21,7 @@ void createImage() {
 			int idx = i * outWidth + j;
 			double y = static_cast<double>(i) / (outHeight - 1) * 2 - 1;
 			double x = static_cast<double>(j) / (outWidth - 1) * 2 - 1;
-			NNMatrix rgb = nn.run(NNMatrix::fromVector({x, y}));
+			Matrix rgb = nn.run(Matrix::fromVector({x, y}));
 			for (int c = 0; c < 3; c++) {
 				// Normalize and clamp from (-1, 1) to (0, 255)
 				double pixel = (rgb[c][0] + 1) * 127.5;
@@ -34,7 +34,7 @@ void createImage() {
 	data = nullptr;
 }
 
-std::vector<std::pair<NNMatrix, NNMatrix>> batch;
+std::vector<std::pair<Matrix, Matrix>> batch;
 
 // Load a the image from `imgLoadPath` and create training batch data
 void loadImage() {
@@ -47,10 +47,10 @@ void loadImage() {
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			int idx = i * width + j;
-			std::pair<NNMatrix, NNMatrix> sample;
+			std::pair<Matrix, Matrix> sample;
 			double y = static_cast<double>(i) / (height - 1) * 2 - 1;
 			double x = static_cast<double>(j) / (width - 1) * 2 - 1;
-			sample.first = NNMatrix::fromVector({x, y});
+			sample.first = Matrix::fromVector({x, y});
 			sample.second.resize(3,1);
 			for (int c = 0; c < 3; c++) {
 				// Normalize from (0, 255) to (-1, -1)
