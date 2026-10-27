@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+using namespace Soma;
 
 // Returns the dataset of from `imgPath` and `lblPath`
 // Adapted from https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
@@ -60,7 +61,7 @@ std::vector<std::pair<NNMatrix, NNMatrix>> loadMNIST(std::string imgPath, std::s
 
 NeuralNetwork nn;
 std::vector<std::pair<NNMatrix, NNMatrix>> trainset, testset;
-AdamOptimizer adam;
+Optimizers::AdamOptimizer adam;
 
 // Calculate average loss of the test set (Uses multithreading if OpenMP is used)
 double avgLoss() {
@@ -104,19 +105,19 @@ int main() {
 			std::cout << "Testing images loaded\n";
 		}
 	}
-	nn.addLayer<DenseLayer>(784, 128);
-	nn.addLayer<ActivationLayer>(128, ActivationType::ReLU);
-	nn.addLayer<DenseLayer>(128, 64);
-	nn.addLayer<ActivationLayer>(64, ActivationType::ReLU);
-	nn.addLayer<DenseLayer>(64, 10);
-	nn.addLayer<ActivationLayer>(128, ActivationType::Softmax);
+	nn.addLayer<Layers::DenseLayer>(784, 128);
+	nn.addLayer<Layers::ActivationLayer>(128, ActivationType::ReLU);
+	nn.addLayer<Layers::DenseLayer>(128, 64);
+	nn.addLayer<Layers::ActivationLayer>(64, ActivationType::ReLU);
+	nn.addLayer<Layers::DenseLayer>(64, 10);
+	nn.addLayer<Layers::ActivationLayer>(128, ActivationType::Softmax);
 	nn.setLossFunction(LossType::CCE);
 	Initialization::heNormal(nn);
 	adam.init(nn);
 	
 	// If there exists a data file `./nn.dat`, read from it
 	std::ifstream in("./nn.dat", std::ios::binary);
-	if (in.good()) nn.load(in, std::make_unique<AdamOptimizer>(adam));
+	if (in.good()) nn.load(in, std::make_unique<Optimizers::AdamOptimizer>(adam));
 	in.close();
 
 	std::cout << "Training starting after " << nn.epochsTrained << " epochs and " << nn.iterationsTrained << " iterations.\n";

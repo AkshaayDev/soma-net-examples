@@ -4,6 +4,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image.h"
 #include "stb_image_write.h"
+using namespace Soma;
 
 NeuralNetwork nn;
 const char* imgLoadPath = "./img/img.png";
@@ -66,17 +67,17 @@ void loadImage() {
 // Then, it approximates a function f(x,y) => {r,g,b}
 // This script loads the image data, trains the network and creates a resulting image approximation
 int main() {
-	nn.addLayer<SIRENLayer>(2, 32);
-	nn.addLayer<SIRENLayer>(32, 32);
-	nn.addLayer<DenseLayer>(32, 3);
+	nn.addLayer<Layers::SIRENLayer>(2, 32);
+	nn.addLayer<Layers::SIRENLayer>(32, 32);
+	nn.addLayer<Layers::DenseLayer>(32, 3);
 	Initialization::SIRENInit(nn);
 	Initialization::xavierUniform(nn);
 	nn.setLossFunction(LossType::MSE);
-	AdamOptimizer adam(nn);
+	Optimizers::AdamOptimizer adam(nn);
 
 	// If there exists a data file `./nn.dat`, read from it
 	std::ifstream in("./nn.dat", std::ios::binary);
-	if (in.good()) nn.load(in, std::make_unique<AdamOptimizer>(adam));
+	if (in.good()) nn.load(in, std::make_unique<Optimizers::AdamOptimizer>(adam));
 	in.close();
 
 	// Train the network with adam

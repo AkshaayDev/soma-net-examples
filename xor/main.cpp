@@ -1,14 +1,15 @@
 #include "../../soma-net/soma.hpp"
 #include <fstream>
+using namespace Soma;
 
 // In this example, we will be using a simple 2,2,1 architecture to approximate an XOR gate
 int main() {
 	NeuralNetwork nn;
 	// Use sigmoid activations
-	nn.addLayer<DenseLayer>(2, 2);
-	nn.addLayer<ActivationLayer>(2, ActivationType::Sigmoid);
-	nn.addLayer<DenseLayer>(2, 1);
-	nn.addLayer<ActivationLayer>(1, ActivationType::Sigmoid);
+	nn.addLayer<Layers::DenseLayer>(2, 2);
+	nn.addLayer<Layers::ActivationLayer>(2, ActivationType::Sigmoid);
+	nn.addLayer<Layers::DenseLayer>(2, 1);
+	nn.addLayer<Layers::ActivationLayer>(1, ActivationType::Sigmoid);
 	// Initialize weights using the Xavier Normal initialization
 	Initialization::xavierNormal(nn);
 	// Use Mean Squared Error loss function
@@ -21,7 +22,7 @@ int main() {
 		{ NNMatrix::fromVector({1,1}), NNMatrix::fromScalar(0.0) }  // 1 ^ 1 = 0
 	};
 	// Train the network with the training data with gradient descent
-	GradientDescentOptimizer gd(nn, 1); // learningRate = 1
+	Optimizers::GradientDescentOptimizer gd(nn, 1); // learningRate = 1
 	Trainer trainer(nn, gd, data);
 	trainer.enableShuffling = false;
 	trainer.train(10000);

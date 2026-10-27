@@ -15,7 +15,7 @@ Right Mouse: Black brush/Erase
 #include "../../soma-net/soma.hpp"
 #include "raylib.h"
 
-NNMatrix pixels(28 * 28, 1);
+Soma::NNMatrix pixels(28 * 28, 1);
 const int pixelScale = 20;
 const int brushSize = 2;
 
@@ -46,7 +46,7 @@ static void draw(int delta) {
 
 int main() {
 	// Load network data from `./nn.dat`
-	NeuralNetwork nn;
+	Soma::NeuralNetwork nn;
 	std::ifstream in("./nn.dat", std::ios::binary);
 	if (in.good()) nn.load(in);
 	else std::cerr << "Could not open network data file\n";
@@ -89,7 +89,7 @@ int main() {
 		DrawText("\'C\' Key: Clear canvas", 10, 50, 20, DARKGRAY);
 
 		// Draw the predictions
-		NNMatrix res = nn.run(pixels);
+		Soma::NNMatrix res = nn.run(pixels);
 		for (int i = 0; i < 10; i++) {
 			int x = 28 * pixelScale + 40;
 			int y = 50 + i * 50;
