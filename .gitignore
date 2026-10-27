@@ -1,9 +1,10 @@
-# Output file extensions
+# Output files
 *.exe
 *.out
 xor/out.dat
 inr/nn.dat
 inr/res.png
+mnist/nn.dat
 
 # Training data
 mnist/data
